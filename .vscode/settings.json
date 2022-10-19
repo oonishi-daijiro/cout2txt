@@ -1,0 +1,8 @@
+{
+  "files.associations": {
+    ".*lintrc": "json",
+    "*.ejs": "html",
+    "*.toml": "toml",
+    "*.tcc": "cpp"
+  }
+}
