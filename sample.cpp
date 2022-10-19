@@ -111,7 +111,7 @@ void CreateChildProcess()
   siStartInfo.cb = sizeof(STARTUPINFO);
   siStartInfo.hStdError = g_hChildStd_OUT_Wr;
   siStartInfo.hStdOutput = g_hChildStd_OUT_Wr;
-  siStartInfo.hStdInput = g_hChildStd_IN_Rd;
+  siStartInfo.hStdInput = GetStdHandle(STD_INPUT_HANDLE);
   siStartInfo.dwFlags |= STARTF_USESTDHANDLES;
 
   // Create the child process.
@@ -204,6 +204,7 @@ void ErrorExit(PTSTR lpszFunction)
 // Format a readable error message, display a message box,
 // and exit from the application.
 {
+  std::cout << "error" << std::endl;
   std::cout << lpszFunction << std::endl;
   ExitProcess(1);
 }
