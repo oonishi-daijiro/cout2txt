@@ -60,7 +60,6 @@ void CreateChildProcess(char *processPath)
     CloseHandle(piProcInfo.hThread);
 
     CloseHandle(coutPipeWriter);
-    // CloseHandle(GetStdHandle(STD_OUTPUT_HANDLE));
   }
   readFromPipe(coutPipeReader);
   std::cout << "2" << std::endl;
@@ -70,15 +69,23 @@ void CreateChildProcess(char *processPath)
 
 void readFromPipe(HANDLE &childCoutReader)
 {
+  const size_t BUFSIZE = 4096;
+
   DWORD dwRead, dwWritten;
-  CHAR chBuf[4096];
+  CHAR chBuf[BUFSIZE];
   BOOL bSuccess = FALSE;
   HANDLE hParentStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
 
-  ReadFile(childCoutReader, chBuf, 4096, &dwRead, NULL);
-  std::cout << "readfile end" << std::endl;
-  WriteFile(hParentStdOut, chBuf, dwRead, &dwWritten, NULL);
+  for (;;)
+  {
+    bSuccess = ReadFile(childCoutReader, chBuf, BUFSIZE, &dwRead, NULL);
+    if (!bSuccess || dwRead == 0)
+      break;
 
-  std::cout << "sus" << std::endl;
+    bSuccess = WriteFile(hParentStdOut, chBuf,
+                         dwRead, &dwWritten, NULL);
+    if (!bSuccess)
+      break;
+  }
   return;
 }

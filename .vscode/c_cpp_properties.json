@@ -4,9 +4,8 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "C:/MinGw/include/"
+                "${default}"
             ],
-            "compilerPath": "C:/MinGW/bin/g++.exe",
             "defines": [
                 "_DEBUG",
                 "UNICODE",
