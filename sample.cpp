@@ -2,7 +2,6 @@
 #include <tchar.h>
 #include <stdio.h>
 #include <iostream>
-// #include <strsafe.h>
 
 #define BUFSIZE 4096
 
@@ -62,11 +61,11 @@ int _tmain(int argc, TCHAR *argv[])
 
   g_hInputFile = CreateFile(
       argv[1],
-      GENERIC_READ,
+      GENERIC_WRITE,
       0,
       NULL,
-      OPEN_EXISTING,
-      FILE_ATTRIBUTE_READONLY,
+      CREATE_ALWAYS,
+      FILE_ATTRIBUTE_NORMAL,
       NULL);
 
   if (g_hInputFile == INVALID_HANDLE_VALUE)
@@ -129,9 +128,7 @@ void CreateChildProcess()
 
   // If an error occurs, exit the application.
   if (!bSuccess)
-  {
     ErrorExit(TEXT("CreateProcess"));
-  }
   else
   {
     // Close handles to the child process and its primary thread.
@@ -143,9 +140,9 @@ void CreateChildProcess()
 
     // Close handles to the stdin and stdout pipes no longer needed by the child process.
     // If they are not explicitly closed, there is no way to recognize that the child process has ended.
-
     CloseHandle(g_hChildStd_OUT_Wr);
     CloseHandle(g_hChildStd_IN_Rd);
+    std::cout << "close handle" << std::endl;
   }
 }
 
@@ -189,6 +186,7 @@ void ReadFromPipe(void)
   for (;;)
   {
     bSuccess = ReadFile(g_hChildStd_OUT_Rd, chBuf, BUFSIZE, &dwRead, NULL);
+    std::cout << "bSuccess:" << bSuccess << std::endl;
     if (!bSuccess || dwRead == 0)
       break;
 
@@ -197,6 +195,7 @@ void ReadFromPipe(void)
     if (!bSuccess)
       break;
   }
+  std::cout << "chBuf" << chBuf << std::endl;
 }
 
 void ErrorExit(PTSTR lpszFunction)
